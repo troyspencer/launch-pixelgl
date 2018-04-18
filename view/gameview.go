@@ -30,9 +30,19 @@ func (gameview *GameView) FillWindowWithCanvas() {
 	gameview.Window.Update()
 }
 
+func (gameview *GameView) DrawCanvasToWindow() {
+	gameview.Window.Clear(colornames.Black)
+	gameview.Canvas.Draw(gameview.Window, pixel.IM.Moved(gameview.Canvas.Bounds().Center()))
+	gameview.Window.Update()
+}
+
 func (gameview *GameView) GetInput() *input.PlayerInput {
 	playerInput := new(input.PlayerInput)
-	if gameview.Window.JustPressed(pixelgl.MouseButtonLeft) {
+
+	// check for escape
+	gameview.Window.SetClosed(gameview.Window.JustPressed(pixelgl.KeyEscape) || gameview.Window.JustPressed(pixelgl.KeyQ))
+
+	if gameview.Window.Pressed(pixelgl.MouseButtonLeft) {
 		playerInput.ClickPosition = gameview.Camera.Matrix.Unproject(gameview.Window.MousePosition())
 		playerInput.LeftClicked = true
 	}

@@ -13,9 +13,10 @@ import (
 
 func run() {
 	cfg := pixelgl.WindowConfig{
-		Title:  "Launch",
-		Bounds: pixel.R(0, 0, 1920, 1080),
-		VSync:  true,
+		Title:       "Launch",
+		Bounds:      pixel.R(0, 0, 1920, 1080),
+		VSync:       true,
+		Undecorated: true,
 	}
 	win, err := pixelgl.NewWindow(cfg)
 	if err != nil {
@@ -25,10 +26,10 @@ func run() {
 	gameview := &view.GameView{
 		Window: win,
 		Camera: camera.New(),
-		Canvas: pixelgl.NewCanvas(pixel.R(-1000, -1000, 1000, 1000)),
+		Canvas: pixelgl.NewCanvas(pixel.R(0, 0, 1920, 1080)),
 	}
 
-	playerCharacter := character.New()
+	playerCharacter := character.New(gameview.Window.Bounds().Center())
 	ts := timestep.New()
 
 	for !win.Closed() {
@@ -36,19 +37,18 @@ func run() {
 		ts.CalculateDelta()
 
 		// adjust camera
-		gameview.Camera.Follow(playerCharacter.Position.Center(), ts.Delta)
-		gameview.Canvas.SetMatrix(gameview.Camera.Matrix)
-
-		// get input
-		input := gameview.GetInput()
+		//gameview.Camera.Follow(playerCharacter.Position.Center(), ts.Delta)
+		//gameview.Canvas.SetMatrix(gameview.Camera.Matrix)
 
 		// draw character to canvas
 		gameview.Canvas.Clear(colornames.Black)
-		playerCharacter.Update(ts.Delta, input, gameview)
+		playerCharacter.Update(ts.Delta, gameview)
 		playerCharacter.Body.Draw(gameview.Canvas)
 
 		// stretch canvas to window
-		gameview.FillWindowWithCanvas()
+		//gameview.FillWindowWithCanvas()
+
+		gameview.DrawCanvasToWindow()
 	}
 }
 
