@@ -2,6 +2,7 @@ package character
 
 import (
 	"image/color"
+	"math"
 	"time"
 
 	"github.com/faiface/pixel"
@@ -35,7 +36,7 @@ func (buffer *positionBuffer) addPosition(position pixel.Rect) {
 }
 
 func (buffer *positionBuffer) getPosition(age int) positionTimeElement {
-	relativeIndex := buffer.index - age
+	relativeIndex := int(math.Mod(float64(buffer.index-age), float64(len(buffer.queue))))
 	if relativeIndex < 0 {
 		relativeIndex += len(buffer.queue)
 	}
@@ -105,12 +106,16 @@ func (char *Character) drawBodyQueue() {
 }
 
 func (char *Character) drawBodyQueueElement(index int) {
+	// calculate multiplier based on time
 	bufferLength := len(char.positionBuffer.queue)
-	colorValue := uint8(255 - index*(255/bufferLength))
-	newColor := color.RGBA{colorValue, colorValue, colorValue, 255}
 	visibilityTime := float64(bufferLength) * char.drawInterval
-	sizeMultiplier := time.Since(char.positionBuffer.getPosition(index).Time).Seconds() / visibilityTime
-	char.drawBodyElement(char.positionBuffer.getPosition(index).Rect, newColor, float64(40-40*sizeMultiplier))
+	timeMultiplier := time.Since(char.positionBuffer.getPosition(index).Time).Seconds() / visibilityTime
+	if timeMultiplier > 1 {
+		timeMultiplier = 1
+	}
+	colorValue := uint8(255 - 255*timeMultiplier)
+	newColor := color.RGBA{colorValue, colorValue, colorValue, 255}
+	char.drawBodyElement(char.positionBuffer.getPosition(index).Rect, newColor, float64(40-40*timeMultiplier))
 }
 
 func (char *Character) drawBodyElement(position pixel.Rect, bodyColor color.Color, size float64) {
