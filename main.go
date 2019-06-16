@@ -8,11 +8,11 @@ import (
 	"github.com/faiface/pixel/pixelgl"
 	"golang.org/x/image/colornames"
 
-	"github.com/troyspencer/launch/character"
-	"github.com/troyspencer/launch/debris"
-	"github.com/troyspencer/launch/timestep"
-	"github.com/troyspencer/launch/view"
-	"github.com/troyspencer/launch/view/camera"
+	"github.com/troyspencer/launch-pixelgl/character"
+	"github.com/troyspencer/launch-pixelgl/debris"
+	"github.com/troyspencer/launch-pixelgl/timestep"
+	"github.com/troyspencer/launch-pixelgl/view"
+	"github.com/troyspencer/launch-pixelgl/view/camera"
 )
 
 func run() {
@@ -36,7 +36,7 @@ func run() {
 	playerCharacter := character.New(gameview.Window.Bounds().Center())
 	im := imdraw.New(nil)
 	debrisChunk := &debris.RectangularDebris{
-		Color:    colornames.Blue,
+		Color:    colornames.Red,
 		Position: pixel.V(400, 800),
 		Rotation: math.Pi / 3,
 		Bounds:   pixel.R(0, 0, 100, 200),

@@ -7,7 +7,7 @@ import (
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
-	"github.com/troyspencer/launch/view"
+	"github.com/troyspencer/launch-pixelgl/view"
 	"golang.org/x/image/colornames"
 )
 
